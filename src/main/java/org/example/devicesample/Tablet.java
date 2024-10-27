@@ -4,8 +4,6 @@ public class Tablet extends Device {
     private double batteryLife;
     private boolean hasStylus;
 
-    public Tablet() {}
-
     public Tablet(Devicetype type, String name, double price, double weight, double batteryLife, boolean hasStylus) {
         super(type, name, price, weight);
         this.batteryLife = batteryLife;

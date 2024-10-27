@@ -4,8 +4,6 @@ public class Laptop extends Device {
     private int ramSize;
     private String processorType;
 
-    public Laptop() {}
-
     public Laptop(Devicetype type, String name, double price, double weight, int ramSize, String processorType) {
         super(type, name, price, weight);
         this.ramSize = ramSize;

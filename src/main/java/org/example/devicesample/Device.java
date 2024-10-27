@@ -1,15 +1,12 @@
 package org.example.devicesample;
 
-
-import java.util.Currency;
-
 public class Device {
     protected Devicetype type;
     protected String name;
     protected double price;
     protected double weight;
 
-    public Device(){}
+    public Device() {}
 
     public Device(Devicetype type, String name, double price, double weight) {
         this.type = type;
@@ -48,5 +45,15 @@ public class Device {
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "type=" + type +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", weight=" + weight +
+                '}';
     }
 }

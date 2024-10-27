@@ -1,15 +1,8 @@
 package org.example.devicesample;
 
-
-public class Smartphone extends Device{
+public class Smartphone extends Device {
     protected int screenSize;
     protected int resolution;
-
-    public Smartphone(){}
-
-    public Smartphone(Devicetype type, String name, double price, double weight) {
-        super(type, name, price, weight);
-    }
 
     public Smartphone(Devicetype type, String name, double price, double weight, int screenSize, int resolution) {
         super(type, name, price, weight);

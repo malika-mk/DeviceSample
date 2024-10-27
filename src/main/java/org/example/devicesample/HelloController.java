@@ -10,114 +10,103 @@ public class HelloController {
 
     @FXML
     private Tab tab1, tab2, tab3;
-
-//    @FXML
-//    private ToggleGroup device;
-//
-//    @FXML
-//    private RadioButton rbLaptop;
-//
-//    @FXML
-//    private RadioButton rbSmartphone;
-//
-//    @FXML
-//    private RadioButton rbTablet;
-
     @FXML
     private TextField textNameSmartphone, textNameLaptop, textNameTablet;
-
     @FXML
-    private TextField textPrice;
-
+    private TextField textPriceSmartphone, textPriceLaptop, textPriceTablet;
     @FXML
-    private TextField textWeight;
-
+    private TextField textWeightSmartphone, textWeightLaptop, textWeightTablet;
     @FXML
-    private TextField textScreenSize;     // Smartphone-specific
+    private TextField textScreenSize, textCameraResolution; // Smartphone-specific
     @FXML
-    private TextField textCameraResolution; // Smartphone-specific
-
+    private TextField textRamSize, textProcessorType;       // Laptop-specific
     @FXML
-    private TextField textRamSize;        // Laptop-specific
-    @FXML
-    private TextField textProcessorType;   // Laptop-specific
-
-    @FXML
-    private TextField textBatteryLife;     // Tablet-specific
-    @FXML
-    private TextField textHasStylus;       // Tablet-specific
-
+    private TextField textBatteryLife, textHasStylus;       // Tablet-specific
     @FXML
     private ListView<Device> listView;
-
     @FXML
     private Label label;
 
-    ObservableList<Device> devices = FXCollections.observableArrayList();
+    // ObservableList to store devices and update the ListView automatically
+    private ObservableList<Device> devices = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+        // Bind the ObservableList to the ListView to automatically reflect changes
         listView.setItems(devices);
-
-        // Toggle visibility of device-specific fields based on selected radio button
-        device.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (rbSmartphone.isSelected()) {
-                setVisibility(true, false, false);
-            } else if (rbLaptop.isSelected()) {
-                setVisibility(false, true, false);
-            } else if (rbTablet.isSelected()) {
-                setVisibility(false, false, true);
-            }
-        });
-    }
-
-    private void setVisibility(boolean smartphone, boolean laptop, boolean tablet) {
-        // Toggle visibility of fields for each device type
-        textScreenSize.setVisible(smartphone);
-        textCameraResolution.setVisible(smartphone);
-
-        textRamSize.setVisible(laptop);
-        textProcessorType.setVisible(laptop);
-
-        textBatteryLife.setVisible(tablet);
-        textHasStylus.setVisible(tablet);
     }
 
     @FXML
     void onAddClick(ActionEvent event) {
-        try {
-            // Ensure numeric fields are parsed correctly
-            String name = textNameSmartphone.getText();
-            double price = Double.parseDouble(textPrice.getText());
-            double weight = Double.parseDouble(textWeight.getText());
-            Device device;
+        Device device;
 
-            if (rbSmartphone.isSelected()) {
-                int screenSize = Integer.parseInt(textScreenSize.getText());
-                int cameraResolution = Integer.parseInt(textCameraResolution.getText());
-                device = new Smartphone(Devicetype.SMARTPHONE, name, price, weight, screenSize, cameraResolution);
-            } else if (rbLaptop.isSelected()) {
-                int ramSize = Integer.parseInt(textRamSize.getText());
-                String processorType = textProcessorType.getText();
+        try {
+            if (tab1.isSelected()) { // Smartphone
+                if (textNameSmartphone.getText().isEmpty() || textPriceSmartphone.getText().isEmpty() ||
+                        textWeightSmartphone.getText().isEmpty() || textScreenSize.getText().isEmpty() ||
+                        textCameraResolution.getText().isEmpty()) {
+                    label.setText("Error: Please fill in all fields for Smartphone.");
+                    return;
+                }
+
+                // Parse values for Smartphone
+                String name = textNameSmartphone.getText().trim();
+                double price = Double.parseDouble(textPriceSmartphone.getText().trim());
+                double weight = Double.parseDouble(textWeightSmartphone.getText().trim());
+                int screenSize = Integer.parseInt(textScreenSize.getText().trim());
+                int resolution = Integer.parseInt(textCameraResolution.getText().trim());
+
+                device = new Smartphone(Devicetype.SMARTPHONE, name, price, weight, screenSize, resolution);
+
+            } else if (tab2.isSelected()) { // Laptop
+                if (textNameLaptop.getText().isEmpty() || textPriceLaptop.getText().isEmpty() ||
+                        textWeightLaptop.getText().isEmpty() || textRamSize.getText().isEmpty() ||
+                        textProcessorType.getText().isEmpty()) {
+                    label.setText("Error: Please fill in all fields for Laptop.");
+                    return;
+                }
+
+                // Parse values for Laptop
+                String name = textNameLaptop.getText().trim();
+                double price = Double.parseDouble(textPriceLaptop.getText().trim());
+                double weight = Double.parseDouble(textWeightLaptop.getText().trim());
+                int ramSize = Integer.parseInt(textRamSize.getText().trim());
+                String processorType = textProcessorType.getText().trim();
+
                 device = new Laptop(Devicetype.LAPTOP, name, price, weight, ramSize, processorType);
-            } else if (rbTablet.isSelected()) {
-                double batteryLife = Double.parseDouble(textBatteryLife.getText());
-                boolean hasStylus = Boolean.parseBoolean(textHasStylus.getText());
+
+            } else if (tab3.isSelected()) { // Tablet
+                if (textNameTablet.getText().isEmpty() || textPriceTablet.getText().isEmpty() ||
+                        textWeightTablet.getText().isEmpty() || textBatteryLife.getText().isEmpty() ||
+                        textHasStylus.getText().isEmpty()) {
+                    label.setText("Error: Please fill in all fields for Tablet.");
+                    return;
+                }
+
+                // Parse values for Tablet
+                String name = textNameTablet.getText().trim();
+                double price = Double.parseDouble(textPriceTablet.getText().trim());
+                double weight = Double.parseDouble(textWeightTablet.getText().trim());
+                double batteryLife = Double.parseDouble(textBatteryLife.getText().trim());
+                boolean hasStylus = Boolean.parseBoolean(textHasStylus.getText().trim());
+
                 device = new Tablet(Devicetype.TABLET, name, price, weight, batteryLife, hasStylus);
+
             } else {
-                // If no device type is selected, don't add anything
+                label.setText("Error: No device type selected.");
                 return;
             }
 
-            devices.add(device); // Add the device to the ObservableList, which updates the ListView
+            // Add the device to the ObservableList, which updates the ListView automatically
+            devices.add(device);
+            label.setText("Device added successfully.");
+
         } catch (NumberFormatException e) {
-            System.out.println("Error: Please ensure all numeric fields contain valid numbers.");
+            label.setText("Error: Ensure all numeric fields contain valid numbers.");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 
     @FXML
     protected void onListClicked() {
@@ -129,10 +118,12 @@ public class HelloController {
 
     @FXML
     private void onRemoveClick() {
-        int id = listView.getSelectionModel().getSelectedIndex();
-        if (id >= 0) {
-            label.setText(devices.get(id).getName() + " is removed.");
-            devices.remove(id);
+        int selectedIndex = listView.getSelectionModel().getSelectedIndex();
+        if (selectedIndex >= 0) {
+            Device removedDevice = devices.remove(selectedIndex); // Remove the selected device
+            label.setText(removedDevice.getName() + " removed.");
+        } else {
+            label.setText("Error: No device selected to remove.");
         }
     }
 }
