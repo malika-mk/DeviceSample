@@ -1,4 +1,6 @@
 package org.example.devicesample;
 
-public class Devicetype {
+
+public enum Devicetype {
+    SMARTPHONE, LAPTOP, TABLET
 }
